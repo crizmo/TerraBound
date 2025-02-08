@@ -1,8 +1,12 @@
 from flask import Flask, request, jsonify # type: ignore
-from flask_cors import CORS # type: ignore
+from flask_cors import CORS  # type: ignore
+import logging
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @app.route('/')
 def index():
