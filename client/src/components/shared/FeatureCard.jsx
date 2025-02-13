@@ -50,7 +50,7 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm }) => {
     const sendMinMaxToServer = async (min, max) => {
         console.log(`Sending Min and Max values to server: ${min}, ${max}`);
         try {
-            const response = await fetch('http://127.0.0.1:5000/minmax', {
+            const response = await fetch('http://127.0.0.1:5010/minmax', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

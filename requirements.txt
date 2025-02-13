@@ -1,0 +1,7 @@
+segment-geospatial
+gdown
+numpy
+tqdm
+Flask
+flask_cors
+geopandas
