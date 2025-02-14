@@ -9,6 +9,14 @@ function App() {
   const [features, setFeatures] = useState([])
   const [editDetails, setEditDetails] = useState({ id: null, newText: '' });
   
+  // Create a reference to the fetchSegmentationData function
+  const handleSegmentationComplete = async () => {
+    const mapComponent = document.querySelector('#map-container');
+    if (mapComponent && mapComponent.fetchSegmentationData) {
+      await mapComponent.fetchSegmentationData();
+    }
+  };
+
   return (
     <>
       <div className='w-full h-full' >
@@ -25,7 +33,11 @@ function App() {
         </div>
 
         {/* Sidebar */}
-        <SideBar features={features} setEditDetails={setEditDetails}/>
+        <SideBar 
+          features={features} 
+          setEditDetails={setEditDetails}
+          onSegmentationComplete={handleSegmentationComplete}
+        />
       </div>
     </>
   )

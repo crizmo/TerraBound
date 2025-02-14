@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, FeatureGroup, LayersControl } from 'react-leaflet';
+import { MapContainer, TileLayer, FeatureGroup, LayersControl, GeoJSON } from 'react-leaflet';
 import { EditControl } from "react-leaflet-draw";
 import 'leaflet/dist/leaflet.css';
 import { DEFAULT_POSITION } from '@/config/mapConfig';
 import TextInput from '@/components/shared/TextInput';
 
-const { BaseLayer } = LayersControl;
+const { BaseLayer, Overlay } = LayersControl;
 
 // Initialize global variable `type`
 window.type = '';
@@ -17,6 +17,7 @@ window.type = '';
 const MapComponent = ({ textMode, editDetails, features, setFeatures }) => {
     const [isOpen, setIsOpen] = React.useState(false);                  // text input modal
     const [selectedLayer, setSelectedLayer] = React.useState({});       // selected feature
+    const [segmentationData, setSegmentationData] = React.useState(null);
     L.Icon.Default.imagePath = '/images/';
 
     // bind the text to the selected feature, then push it to the properties field so we could use toGeoJSON() to get the feature
@@ -108,6 +109,41 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures }) => {
         });
     };
 
+    // Fetch segmentation data
+    const fetchSegmentationData = async () => {
+        try {
+            console.log("Fetching segmentation data...");
+            const response = await fetch('http://127.0.0.1:5010/get-segments');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.status === 'success') {
+                    console.log("Segmentation data received");
+                    const parsedData = JSON.parse(data.data);
+                    setSegmentationData(parsedData);
+                    console.log("Segmentation data set:", parsedData);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching segmentation data:', error);
+        }
+    };
+
+    // Expose fetchSegmentationData to window object
+    React.useEffect(() => {
+        if (document.querySelector('#map-container')) {
+            document.querySelector('#map-container').fetchSegmentationData = fetchSegmentationData;
+        }
+    }, []);
+
+    // Style for the segmentation polygons
+    const segmentStyle = {
+        fillColor: '#ff7800',
+        weight: 2,
+        opacity: 1,
+        color: '#ff7800',
+        fillOpacity: 0.4
+    };
+
     /************************************************************
      * RENDERING
      ************************************************************/
@@ -132,6 +168,17 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures }) => {
                             url='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
                         />
                     </BaseLayer>
+
+                    {/* Add Segmentation Layer */}
+                    <Overlay checked name="Segmentation">
+                        {segmentationData && (
+                            <GeoJSON 
+                                key={JSON.stringify(segmentationData)}
+                                data={segmentationData} 
+                                style={segmentStyle}
+                            />
+                        )}
+                    </Overlay>
                 </LayersControl>
 
                 {/* Draw Control & Features */}
@@ -140,7 +187,11 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures }) => {
                         textMode={textMode}
                         position="bottomleft"
                         onEdited={_onEdited}
-                        onCreated={_onCreated}
+                        onCreated={(e) => {
+                            _onCreated(e);
+                            // Reset segmentation data when new feature is created
+                            setSegmentationData(null);
+                        }}
                         onDeleted={_onDeleted}
                         draw={{
                             rectangle: true,
@@ -160,6 +211,7 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures }) => {
                 onSubmitText={onSubmitText}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
+                onSegmentationComplete={fetchSegmentationData}
             />
         </section>
     );

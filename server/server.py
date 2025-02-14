@@ -3,6 +3,7 @@ from flask_cors import CORS
 import logging
 import os
 import sys
+import geopandas as gpd
 
 # Add parent directory to path to import local modules
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -76,6 +77,33 @@ def minmax():
                 'message': result['error']
             }), 500
             
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
+@app.route('/get-segments', methods=['GET'])
+def get_segments():
+    try:
+        shapefile_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
+                                    'temp', 'segmentation', 'temp_polygons.shp')
+        
+        if not os.path.exists(shapefile_path):
+            return jsonify({
+                'status': 'error',
+                'message': 'Segmentation shapefile not found'
+            }), 404
+            
+        # Read shapefile and convert to GeoJSON
+        gdf = gpd.read_file(shapefile_path)
+        geojson_data = gdf.to_crs(epsg=4326).to_json()  # Convert to WGS84 for web mapping
+        
+        return jsonify({
+            'status': 'success',
+            'data': geojson_data
+        })
+        
     except Exception as e:
         return jsonify({
             'status': 'error',
