@@ -48,11 +48,19 @@ const SideBar = ({ features, setEditDetails, onSegmentationComplete, selectionHa
       boxShadow: '-2px 0 5px rgba(0,0,0,0.1)',
       zIndex: 1000
     }}>
+      <div>
+        <h1 style={{ marginBottom: '10px', fontWeight: 'bold', fontSize: '20px' }}>TerraBound</h1>
+        <h1 style={{ marginBottom: '10px', fontWeight: 'bold', fontSize: '25px' }}>Auto Measurement Of Land</h1>
+      </div>
       {/* Instructions Section */}
       <div className="instructions-section" style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '5px' }}>
-        <h3 style={{ marginBottom: '10px', fontWeight: 'bold' }}>Instructions</h3>
-        <p>• Click on polygons to select/deselect them</p>
-        <p>• Selected polygons will be highlighted in green</p>
+      <h3 style={{ marginBottom: '10px', fontWeight: 'bold' }}>How to Use</h3>
+      <p>• Draw a bounding box around the area of interest.</p>
+      <p>• Start the land boundary detection process.</p>
+      <p>• Click on detected land plots to select or deselect them.</p>
+      <p>• Click the "Calculate Areas" button to get the total area of the selected plots.</p>
+      <p>• Hover over the plot to find the area ID</p>
+
         {selectionHandlers && (
           <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -108,7 +116,7 @@ const SideBar = ({ features, setEditDetails, onSegmentationComplete, selectionHa
           <h4 style={{ marginBottom: '10px', fontWeight: 'bold' }}>Area Calculations</h4>
           {Object.entries(areas).map(([id, area]) => (
             <div key={id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-              <span>Polygon {id}:</span>
+              <span>Area {id}:</span>
               <span>{area.toLocaleString()} m²</span>
             </div>
           ))}

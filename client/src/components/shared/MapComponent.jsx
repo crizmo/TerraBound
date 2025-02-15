@@ -169,10 +169,19 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures, setSelecti
     const onEachFeature = (feature, layer) => {
         layer.feature = feature;
         
+        // Bind a tooltip to show the segment ID on hover
+        if (feature.properties && feature.properties.segment_id) {
+            layer.bindTooltip(`Segment ID: ${feature.properties.segment_id}`, {
+                permanent: false,
+                direction: "auto",
+                sticky: true
+            });
+        }
+    
         layer.on({
             click: (e) => {
                 const featureId = feature.properties.segment_id;
-                
+    
                 setSelectedPolygons(prev => {
                     const newSelected = new Set([...prev]);
                     if (newSelected.has(featureId)) {
@@ -182,7 +191,7 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures, setSelecti
                     }
                     return newSelected;
                 });
-                
+    
                 L.DomEvent.stopPropagation(e);
             },
             mouseover: (e) => {
@@ -200,6 +209,7 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures, setSelecti
             }
         });
     };
+    
 
     // Function to select all polygons
     const selectAllPolygons = () => {
@@ -254,16 +264,16 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures, setSelecti
                 style={{ height: '100vh', width: '100%' }}
             >
                 <LayersControl position="topleft">
-                    <BaseLayer checked name="OpenStreetMap">
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                        />
-                    </BaseLayer>
-                    <BaseLayer name="Google Satellite">
+                    <BaseLayer checked name="Google Satellite">
                         <TileLayer
                             attribution='© Google'
                             url='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+                        />
+                    </BaseLayer>
+                    <BaseLayer name="OpenStreetMap">
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                         />
                     </BaseLayer>
 
@@ -299,11 +309,11 @@ const MapComponent = ({ textMode, editDetails, features, setFeatures, setSelecti
                         onDeleted={_onDeleted}
                         draw={{
                             rectangle: true,
-                            circle: true,
+                            circle: false,
                             circlemarker: false,
-                            marker: true,
-                            polyline: true,
-                            polygon: true,
+                            marker: false,
+                            polyline: false,
+                            polygon: false,
                         }}
                     />
                 </FeatureGroup>

@@ -31,7 +31,7 @@ function App() {
             setFeatures={setFeatures}
             setSelectionHandlers={setSelectionHandlers}
           />
-          <EditMode textMode={textMode} setTextMode={setTextMode}/>
+          {/* <EditMode textMode={textMode} setTextMode={setTextMode}/> */}
         </div>
 
         {/* Sidebar */}
