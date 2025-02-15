@@ -8,6 +8,7 @@ function App() {
   const [textMode, setTextMode] = useState(false)
   const [features, setFeatures] = useState([])
   const [editDetails, setEditDetails] = useState({ id: null, newText: '' });
+  const [selectionHandlers, setSelectionHandlers] = useState(null);
   
   // Create a reference to the fetchSegmentationData function
   const handleSegmentationComplete = async () => {
@@ -28,6 +29,7 @@ function App() {
             editDetails={editDetails} 
             features={features}
             setFeatures={setFeatures}
+            setSelectionHandlers={setSelectionHandlers}
           />
           <EditMode textMode={textMode} setTextMode={setTextMode}/>
         </div>
@@ -37,6 +39,7 @@ function App() {
           features={features} 
           setEditDetails={setEditDetails}
           onSegmentationComplete={handleSegmentationComplete}
+          selectionHandlers={selectionHandlers}
         />
       </div>
     </>
