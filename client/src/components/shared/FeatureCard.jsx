@@ -86,7 +86,7 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm, onSegmentationComple
             let maxLat = Number.NEGATIVE_INFINITY;
             let minLng = Number.POSITIVE_INFINITY;
             let maxLng = Number.NEGATIVE_INFINITY;
-    
+
             coordinates.forEach(line => {
                 line.forEach(point => {
                     const [lng, lat] = point;
@@ -96,59 +96,65 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm, onSegmentationComple
                     if (lng > maxLng) maxLng = lng;
                 });
             });
-    
+
             return {
                 min: [minLat, minLng],
                 max: [maxLat, maxLng]
             };
         };
-    
+
         return (
             <div className='flex flex-col gap-y-2'>
                 {type === "Polygon" &&
-                    <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="item-1">
-                            <div className='flex-between'>
-                                <AccordionTrigger className='flex items-center justify-start gap-x-2'>
-                                    📍 {geojsonFeature.geometry.coordinates[0].length} points
-                                    <ChevronDown className="w-4 h-4 transition-transform duration-200 shrink-0" />
-                                </AccordionTrigger>
-                                <div className='flex justify-end col-span-1'><CopyButton /></div>
-                            </div>
-    
-                            <AccordionContent>
-                                <div className='grid w-full grid-cols-1 gap-y-2'>
-                                    <ul className='col-span-1'>
-                                        {geojsonFeature.geometry.coordinates.map((line, index) => (
-                                            line.map((point, index) => (
-                                                <li key={index} className='flex justify-between'>
-                                                    <span className='font-bold'>{index + 1}</span>
-                                                    <span>{point[1]}, {point[0]}</span>
-                                                </li>
-                                            ))
-                                        ))}
-                                    </ul>
+                    // <Accordion type="single" collapsible className="w-full">
+                    //     <AccordionItem value="item-1">
+                    //         <div className='flex-between'>
+                    //             <AccordionTrigger className='flex items-center justify-start gap-x-2'>
+                    //                 📍 {geojsonFeature.geometry.coordinates[0].length} points
+                    //                 <ChevronDown className="w-4 h-4 transition-transform duration-200 shrink-0" />
+                    //             </AccordionTrigger>
+                    //             <div className='flex justify-end col-span-1'><CopyButton /></div>
+                    //         </div>
+
+                    //         <AccordionContent>
+                    //             <div className='grid w-full grid-cols-1 gap-y-2'>
+                    //                 <ul className='col-span-1'>
+                    //                     {geojsonFeature.geometry.coordinates.map((line, index) => (
+                    //                         line.map((point, index) => (
+                    //                             <li key={index} className='flex justify-between'>
+                    //                                 <span className='font-bold'>{index + 1}</span>
+                    //                                 <span>{point[1]}, {point[0]}</span>
+                    //                             </li>
+                    //                         ))
+                    //                     ))}
+                    //                 </ul>
+                    //             </div>
+
+                    //         </AccordionContent>
+                    //     </AccordionItem>
+                    // </Accordion>
+                    <div className='mt-2'>
+                        {(() => {
+                            const { min, max } = getMinMaxCoordinates(geojsonFeature.geometry.coordinates);
+                            return (
+                                <div>
+                                    <h1
+                                    style={{
+                                        fontWeight: "bold"
+                                    }}
+                                    >Coordinates : </h1>
+                                    <p>Min: [{min[0]}, {min[1]}]</p>
+                                    <p>Max: [{max[0]}, {max[1]}]</p><br />
+                                    <Button onClick={() => sendMinMaxToServer(min, max)}>Start Land Detecttion</Button>
                                 </div>
-                                <div className='mt-4'>
-                                    {(() => {
-                                        const { min, max } = getMinMaxCoordinates(geojsonFeature.geometry.coordinates);
-                                        return (
-                                            <div>
-                                                <p>Min: [{min[0]}, {min[1]}]</p>
-                                                <p>Max: [{max[0]}, {max[1]}]</p>
-                                                <Button onClick={() => sendMinMaxToServer(min, max)}>Send Min Max to Server</Button>
-                                            </div>
-                                        );
-                                    })()}
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
+                            );
+                        })()}
+                    </div>
                 }
             </div>
         );
     };
-    
+
     /************************************************************
      * Function for text
      ************************************************************/
@@ -195,12 +201,12 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm, onSegmentationComple
                     {/* Feature # & Feauter type */}
                     <CardDescription className="pb-2 flex-between gap-x-8">
                         <>Feature #{feature._leaflet_id}</>
-                        {type === "Point" && <Badge className="bg-secondary">Point</Badge>}
+                        {/* {type === "Point" && <Badge className="bg-secondary">Point</Badge>}
                         {type === "LineString" && <Badge className="bg-accent">Line</Badge>}
-                        {type === "Polygon" && <Badge className="bg-primary">Area</Badge>}
+                        {type === "Polygon" && <Badge className="bg-primary">Area</Badge>} */}
                     </CardDescription>
                     {/* Feature text */}
-                    <CardTitle >
+                    {/* <CardTitle >
                         {editing ?
                             // Edit text form 
                             <Form {...form}>
@@ -245,7 +251,7 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm, onSegmentationComple
                                 </Button>
                             </div>
                         }
-                    </CardTitle>
+                    </CardTitle> */}
                 </CardHeader>
                 <CardContent>
                     {/* Feature coordinates */}
