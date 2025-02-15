@@ -22,7 +22,7 @@ const FormSchema = z.object({
     }),
 })
 
-const FeatureCard = ({ feature, setEditDetails, searchTerm }) => {
+const FeatureCard = ({ feature, setEditDetails, searchTerm, onSegmentationComplete }) => {
     const [copied, setCopied] = React.useState(false)
     const [editing, setEditing] = React.useState(false)
 
@@ -59,6 +59,10 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm }) => {
             });
             if (response.ok) {
                 console.log('Min and Max values sent successfully');
+                // Make sure onSegmentationComplete exists before calling
+                if (onSegmentationComplete && typeof onSegmentationComplete === 'function') {
+                    await onSegmentationComplete();
+                }
             } else {
                 console.error('Failed to send Min and Max values', response.statusText);
             }

@@ -1,3 +1,8 @@
+#############################
+#TODO:
+# Remove small polygon filtering
+# Instead merge smaller polygons into larger ones
+#############################
 import os
 import leafmap
 from samgeo.hq_sam import SamGeo
