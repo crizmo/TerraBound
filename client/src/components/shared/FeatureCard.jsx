@@ -145,7 +145,7 @@ const FeatureCard = ({ feature, setEditDetails, searchTerm, onSegmentationComple
                                     >Coordinates : </h1>
                                     <p>Min: [{min[0]}, {min[1]}]</p>
                                     <p>Max: [{max[0]}, {max[1]}]</p><br />
-                                    <Button onClick={() => sendMinMaxToServer(min, max)}>Start Land Detecttion</Button>
+                                    <Button onClick={() => sendMinMaxToServer(min, max)}>Start Land Detection</Button>
                                 </div>
                             );
                         })()}
