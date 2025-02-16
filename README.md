@@ -10,7 +10,7 @@ TerraBound is a dynamic web mapping application developed using React, Vite, and
 - [AI Model Integration](#ai-model-integration)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Contributors](#contributors)
 
 ## Hackofiesta 6.0 - AISpire UP Hackathon
 
@@ -26,15 +26,19 @@ The AI application automates this process by analyzing geospatial data and ident
 **Department:** Board of Revenue  
 **Sector:** Land Administration and Revenue
 
+## Video Demo
+[![Watch the demo](preview_demo.png)](https://drive.google.com/file/d/1ttezXZdMRh9rf-vWqOzuFG-L3f-9z1FC/view?usp=share_link)
+
 ## Features
 
-- **Create Geographic Features**: Add points, lines, and areas to the map.
-- **Text Mode**: Attach text to features; view text in popups by hovering.
+- **Create Geographic Features**: Add polygons, bounding boxes to the map.
+- **Text Mode**: View information about the area in popups by hovering.
 - **Edit and Delete**: Modify or remove existing map features.
-- **Sidebar with Details**: View feature details in a sidebar, including unique IDs, types, text, and coordinates.
-- **GEOJSON Export**: Copy feature details in GEOJSON format directly from the sidebar.
+- **Sidebar with Details**: View feature details in a sidebar, including unique IDs, areas, text, and coordinates.
+- **Coordinates Export**: Copy coordinates details for any particular region directly from the sidebar.
 - **Search Functionality**: Quickly find features listed in the sidebar.
 - **Segmentation**: Segment satellite images and visualize the results on the map.
+- **Measure Land Area**: Measure the area of any particular land plot.
 
 ## How the Process Works
 
@@ -84,11 +88,16 @@ The [`MapComponent`](client/src/components/shared/MapComponent.jsx) in the file 
 #### 5. Selected Polygons Counter:
 - A counter is displayed at the bottom right of the map, showing the number of selected polygons.
 
+#### 6. Measure Land Area:
+- The component allows users to measure the area of any particular land plot by selecting the polygon and clicking the "Measure Area" button.
+- The area is calculated using the `geod.geometry_area_perimeter` function from the `pyproj` library.
+
 ## AI Model Integration
 
-- The component integrates with a segmentation model called **HQ-SAM** (High-Quality Segment Anything Model).
+- The component integrates with a pretrained segmentation model [SamGeo](https://samgeo.gishub.org).
 - The model is used to segment satellite images and generate masks and annotations.
 - The model file (`sam_hq_vit_h.pth`) is downloaded from a specified URL if it does not already exist in the cache directory.
+- We then perform some post processing on these masks to filter out small areas and get the final segmented land areas.
 
 ## Prerequisites
 
@@ -170,18 +179,8 @@ cd TerraBound
 
 6. The server will be running on http://127.0.0.1:5010.
 
-## Usage
+## Contributors
 
-### Client
-
-- **Creating Features**: Use the drawing tools on the map to create points, lines, and polygons.
-- **Editing Features**: Click on a feature to edit its properties or delete it.
-- **Text Mode**: Toggle the text mode to attach text to features.
-- **Sidebar**: View and search for features in the sidebar.
-- **Segmentation**: Use the segmentation functionality to process satellite images and visualize the results.
-
-### Server
-
-- **Endpoints**:
-  - `/`: Basic endpoint to check if the server is running.
-  - `/minmax`: Endpoint to receive bounding box coordinates and process satellite imagery.
+- [Akankshaaaa](https://github.com/Akankshaaaa)
+- [crizmo](https://github.com/crizmo)
+- [rusty3699](https://github.com/rusty3699)
